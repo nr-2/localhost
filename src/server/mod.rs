@@ -45,9 +45,7 @@ struct ListenerInfo {
     server_indices: Vec<usize>,
 }
 
-/// The whole server: one epoll instance, any number of listening sockets,
-/// and the connections/CGI processes spawned from them. Runs entirely on a
-/// single thread.
+
 pub struct Server {
     config: Config,
     epoll: Epoll,
@@ -161,10 +159,7 @@ impl Server {
         }
     }
 
-    // ------------------------------------------------------------------
     // Accepting connections
-    // ------------------------------------------------------------------
-
     fn accept_new_connections(&mut self, listener_idx: usize) {
         let (listen_fd, port, server_indices) = {
             let l = &self.listeners[listener_idx];
@@ -192,9 +187,7 @@ impl Server {
         }
     }
 
-    // ------------------------------------------------------------------
     // Client socket events
-    // ------------------------------------------------------------------
 
     fn handle_client_event(&mut self, fd: RawFd, flags: u32) {
         if flags & (EPOLLERR | EPOLLHUP) != 0 && flags & EPOLLIN == 0 {

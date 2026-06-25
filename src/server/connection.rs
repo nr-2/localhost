@@ -3,13 +3,11 @@ use std::time::Instant;
 use super::cgi::CgiProcess;
 use crate::http::RequestParser;
 
-/// Per-client connection state. One of these exists for every accepted
-/// socket for as long as it stays open (across keep-alive requests).
+
 pub struct Connection {
     pub peer_addr: String,
     pub local_port: u16,
-    /// Indices into `Config::servers` of the virtual hosts that share this
-    /// connection's `(host, port)`. The first entry is the default.
+   
     pub server_indices: Vec<usize>,
 
     pub read_buf: Vec<u8>,
@@ -18,21 +16,16 @@ pub struct Connection {
     pub parser: RequestParser,
 
     pub last_active: Instant,
-    /// Set once a response has been queued; cleared after it is flushed.
     pub awaiting_write: bool,
-    /// Whether the socket should be closed once `write_buf` is fully flushed.
     pub should_close_after_write: bool,
-    /// True once at least one byte of the current request has been read,
-    /// used to distinguish "idle keep-alive" timeouts from "slow client"
-    /// timeouts (the latter get a 408 response).
+
     pub has_partial_request: bool,
 
     /// CGI process handling the current request, if any.
     pub cgi: Option<CgiProcess>,
     pub cgi_keep_alive: bool,
     pub cgi_server_idx: usize,
-    /// (session id, is-new) to apply as `Set-Cookie` once the CGI response
-    /// is finalized.
+
     pub cgi_session: Option<(String, bool)>,
 }
 
@@ -58,7 +51,6 @@ impl Connection {
     }
 
     /// Prepares the connection to parse a new request after the previous
-    /// response has been fully flushed (HTTP keep-alive).
     pub fn reset_for_next_request(&mut self) {
         self.parser = RequestParser::new();
         self.write_buf.clear();

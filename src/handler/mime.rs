@@ -1,4 +1,3 @@
-/// Returns a best-effort MIME type for a file path based on its extension.
 pub fn mime_type(path: &str) -> &'static str {
     let ext = path.rsplit('.').next().unwrap_or("").to_lowercase();
     match ext.as_str() {

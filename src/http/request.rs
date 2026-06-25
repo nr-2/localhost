@@ -80,10 +80,7 @@ impl Request {
 }
 
 /// Incremental, non-blocking-friendly HTTP/1.1 request parser.
-///
-/// Bytes are fed in as they arrive from a non-blocking socket via [`feed`].
-/// The parser consumes only as many bytes as it can use, leaving the rest
-/// in the buffer for the next call.
+
 #[derive(Debug, Clone)]
 pub struct RequestParser {
     state: State,
@@ -109,7 +106,6 @@ impl RequestParser {
     }
 
     /// Feeds bytes from `buf` into the parser, consuming what it can.
-    /// Returns `Ok(true)` once the request (including body) is fully parsed.
     pub fn feed(
         &mut self,
         buf: &mut Vec<u8>,

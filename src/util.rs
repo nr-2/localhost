@@ -1,4 +1,3 @@
-/// Returns the index of the first occurrence of `needle` within `haystack`.
 pub fn find_subslice(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     if needle.is_empty() || haystack.len() < needle.len() {
         return None;

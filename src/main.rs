@@ -7,9 +7,7 @@ mod util;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    // Writing to a socket whose peer has gone away delivers SIGPIPE by
-    // default, which would kill the process. We handle EPIPE as a normal
-    // I/O error instead.
+    
     unsafe {
         libc::signal(libc::SIGPIPE, libc::SIG_IGN);
     }

@@ -42,7 +42,6 @@ pub fn close_fd(fd: RawFd) {
 }
 
 /// Returns `true` if `err` indicates the operation would block on a
-/// non-blocking fd (i.e. try again later).
 pub fn would_block(err: &io::Error) -> bool {
     err.raw_os_error() == Some(libc::EAGAIN)
 }

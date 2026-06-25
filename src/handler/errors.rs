@@ -4,8 +4,7 @@ use crate::config::ServerConfig;
 use crate::http::{reason_phrase, Response};
 
 /// Builds an error response for `code`, preferring a custom error page
-/// configured via `error_page` if one exists and can be read, falling back
-/// to a built-in default page otherwise.
+
 pub fn error_response(code: u16, server: &ServerConfig) -> Response {
     if let Some(path) = server.error_pages.get(&code) {
         if let Ok(content) = fs::read(path) {

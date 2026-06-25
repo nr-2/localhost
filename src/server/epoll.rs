@@ -7,11 +7,7 @@ pub const EPOLLERR: u32 = libc::EPOLLERR as u32;
 pub const EPOLLHUP: u32 = libc::EPOLLHUP as u32;
 pub const EPOLLRDHUP: u32 = libc::EPOLLRDHUP as u32;
 
-/// A thin, safe-ish wrapper around a Linux `epoll` instance.
-///
-/// Every file descriptor we care about (listening sockets, client sockets,
-/// and CGI pipe ends) is registered here. The event loop performs a single
-/// `epoll_wait` per iteration covering all of them.
+/
 pub struct Epoll {
     fd: RawFd,
 }
@@ -50,8 +46,6 @@ impl Epoll {
     }
 
     /// Removes `fd` from the interest list. Errors (e.g. the fd was already
-    /// closed and auto-removed) are ignored, since this is always
-    /// best-effort cleanup.
     pub fn remove(&self, fd: RawFd) {
         unsafe {
             libc::epoll_ctl(self.fd, libc::EPOLL_CTL_DEL, fd, std::ptr::null_mut());

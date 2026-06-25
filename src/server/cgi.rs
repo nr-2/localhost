@@ -132,11 +132,7 @@ impl CgiProcess {
             unsafe {
                 libc::kill(self.pid, libc::SIGKILL);
             }
-            // Reap without blocking; if the kernel hasn't finished yet this
-            // becomes a short-lived zombie reaped on a later sweep is not
-            // possible since we don't track it anymore. In practice SIGKILL
-            // plus WNOHANG immediately after is sufficient for a process
-            // that was merely blocked on I/O.
+
             let mut status = 0;
             unsafe {
                 libc::waitpid(self.pid, &mut status, libc::WNOHANG);

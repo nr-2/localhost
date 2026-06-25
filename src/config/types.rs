@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-/// HTTP methods the server understands at the configuration level.
+/// HTTP methods the server 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Method {
     Get,
@@ -30,21 +30,13 @@ impl Method {
 /// A `location` block inside a `server` block.
 #[derive(Debug, Clone)]
 pub struct Route {
-    /// The path prefix this route matches, e.g. "/" or "/uploads".
     pub path: String,
-    /// HTTP methods allowed on this route.
     pub methods: Vec<Method>,
-    /// Filesystem directory this route is rooted to.
     pub root: Option<String>,
-    /// Default file served when the request targets a directory.
     pub index: Option<String>,
-    /// Whether directory listing is enabled when no index is present.
     pub autoindex: bool,
-    /// HTTP redirection: (status code, target location).
     pub redirect: Option<(u16, String)>,
-    /// Map of file extension (including the leading dot) to CGI interpreter path.
     pub cgi: HashMap<String, String>,
-    /// Directory where uploaded files are stored. Defaults to `root` when not set.
     pub upload_store: Option<String>,
 }
 
@@ -66,17 +58,11 @@ impl Route {
 /// A single `server { ... }` block.
 #[derive(Debug, Clone)]
 pub struct ServerConfig {
-    /// Address to bind to, e.g. "0.0.0.0" or "127.0.0.1".
     pub host: String,
-    /// All ports this server should listen on.
     pub ports: Vec<u16>,
-    /// `server_name` values used to disambiguate virtual hosts.
     pub server_names: Vec<String>,
-    /// Maximum accepted size, in bytes, for a request body.
     pub client_max_body_size: usize,
-    /// Map of status code to a custom error page path (relative to cwd or absolute).
     pub error_pages: HashMap<u16, String>,
-    /// Ordered list of routes/locations.
     pub routes: Vec<Route>,
 }
 
@@ -100,7 +86,7 @@ pub struct Config {
 }
 
 impl ServerConfig {
-    /// Finds the best matching route for `path` using longest-prefix matching.
+    ///  using longest-prefix matching.
     pub fn match_route(&self, path: &str) -> Option<&Route> {
         let mut best: Option<&Route> = None;
         for route in &self.routes {

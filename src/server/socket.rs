@@ -60,7 +60,6 @@ pub fn create_listener(host: &str, port: u16) -> io::Result<RawFd> {
 }
 
 /// Accepts a single pending connection on `listen_fd`, if any.
-/// Returns `Ok(None)` if no connection is currently pending.
 pub fn accept_conn(listen_fd: RawFd) -> io::Result<Option<(RawFd, String)>> {
     unsafe {
         let mut addr: libc::sockaddr_in = mem::zeroed();
@@ -86,8 +85,7 @@ pub fn accept_conn(listen_fd: RawFd) -> io::Result<Option<(RawFd, String)>> {
     }
 }
 
-/// Parses a dotted-quad IPv4 address (or `0.0.0.0`/`*`/`localhost`) into a
-/// `s_addr` value in network byte order.
+/// Parses a dotted-quad IPv4 address 
 fn parse_ipv4(host: &str) -> Option<u32> {
     if host == "*" || host == "0.0.0.0" {
         return Some(0);
