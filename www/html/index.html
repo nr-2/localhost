@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>localhost</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <h1>localhost</h1>
+  <p class="muted">A single-threaded, epoll-driven HTTP/1.1 server written in Rust.</p>
+
+  <h2>Static files &amp; directory listing</h2>
+  <div class="card">
+    <ul>
+      <li><a href="/about.html">/about.html</a> &mdash; another static page</li>
+      <li><a href="/uploads/">/uploads/</a> &mdash; directory listing (autoindex on)</li>
+    </ul>
+  </div>
+
+  <h2>File upload (POST)</h2>
+  <div class="card">
+    <form action="/uploads" method="post" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <button type="submit">Upload</button>
+    </form>
+    <p class="muted">Uploaded files are saved under <code>/uploads/</code> and can be deleted with
+    <code>DELETE /uploads/&lt;filename&gt;</code>.</p>
+  </div>
+
+  <h2>CGI</h2>
+  <div class="card">
+    <ul>
+      <li><a href="/cgi-bin/hello.py">/cgi-bin/hello.py</a> &mdash; Python CGI</li>
+      <li><a href="/cgi-bin/env.sh">/cgi-bin/env.sh</a> &mdash; Shell CGI</li>
+    </ul>
+  </div>
+
+  <h2>Cookies &amp; sessions</h2>
+  <div class="card">
+    <p><a href="/session">/session</a> &mdash; sets a <code>session_id</code> cookie on first visit and
+    counts how many times this session has loaded the page.</p>
+  </div>
+
+  <h2>Error pages</h2>
+  <div class="card">
+    <ul>
+      <li><a href="/does-not-exist">/does-not-exist</a> &rarr; 404</li>
+      <li><a href="/old">/old</a> &rarr; 301 redirect to <code>/</code></li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

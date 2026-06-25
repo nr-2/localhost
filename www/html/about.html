@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About &mdash; localhost</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <h1>About</h1>
+  <p class="muted">A few details about this server.</p>
+
+  <div class="card">
+    <p>This site is served by <strong>localhost</strong>, a single-threaded,
+    non-blocking HTTP/1.1 server written in Rust on top of a raw
+    <code>epoll</code> event loop.</p>
+    <ul>
+      <li>One <code>epoll</code> instance handles every listener, client
+      socket, and CGI pipe.</li>
+      <li>Supports <code>GET</code>, <code>POST</code>, and
+      <code>DELETE</code>, chunked and unchunked request bodies, virtual
+      hosts, cookies/sessions, file uploads, and CGI.</li>
+      <li>Configured via a small nginx-like config file (see
+      <code>conf/default.conf</code>).</li>
+    </ul>
+  </div>
+
+  <p><a href="/">&larr; Back home</a></p>
+</main>
+</body>
+</html>
