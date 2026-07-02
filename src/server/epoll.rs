@@ -7,7 +7,6 @@ pub const EPOLLERR: u32 = libc::EPOLLERR as u32;
 pub const EPOLLHUP: u32 = libc::EPOLLHUP as u32;
 pub const EPOLLRDHUP: u32 = libc::EPOLLRDHUP as u32;
 
-/
 pub struct Epoll {
     fd: RawFd,
 }
