@@ -121,9 +121,9 @@ Routes are matched by longest path prefix on path-segment boundaries. Paths with
 `..` traversal are rejected with `403`.
 
 Duplicate `listen` directives inside the same `server` block are rejected as a
-configuration error. Multiple `server` blocks may still share the same
-`host:port` for virtual hosting; the first server is the default if no
-`server_name` matches.
+configuration error. Multiple `server` blocks may share the same `host:port`
+for virtual hosting when they declare distinct `server_name` values; the first
+server is the default if no `server_name` matches.
 
 ## HTTP Behavior
 
