@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 
 use super::types::{Config, Method, Route, ServerConfig};
@@ -44,6 +44,8 @@ pub fn parse_str(content: &str) -> Result<Config, String> {
             server.routes.push(root);
         }
     }
+
+    validate_listener_conflicts(&servers)?;
 
     Ok(Config { servers })
 }
@@ -246,6 +248,55 @@ fn parse_size(value: &str) -> Result<usize, String> {
     Ok(num * mult)
 }
 
+fn validate_listener_conflicts(servers: &[ServerConfig]) -> Result<(), String> {
+    let mut listener_map: HashMap<(String, u16), Vec<usize>> = HashMap::new();
+
+    for (idx, server) in servers.iter().enumerate() {
+        for &port in &server.ports {
+            listener_map
+                .entry((server.host.clone(), port))
+                .or_default()
+                .push(idx);
+        }
+    }
+
+    for ((host, port), indices) in listener_map {
+        if indices.len() < 2 {
+            continue;
+        }
+
+        let mut seen_names = HashSet::new();
+        let mut unnamed_block = None;
+
+        for idx in indices {
+            let server = &servers[idx];
+            if server.server_names.is_empty() {
+                unnamed_block = Some(idx);
+                break;
+            }
+            for name in &server.server_names {
+                if !seen_names.insert(name.clone()) {
+                    return Err(format!(
+                        "duplicate listen endpoint '{}:{}' shared by multiple server blocks using server_name '{}'",
+                        host, port, name
+                    ));
+                }
+            }
+        }
+
+        if let Some(idx) = unnamed_block {
+            return Err(format!(
+                "duplicate listen endpoint '{}:{}' shared by server block {} without a unique server_name",
+                host,
+                port,
+                idx + 1
+            ));
+        }
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -331,5 +382,39 @@ mod tests {
         )
         .unwrap_err();
         assert!(err.contains("duplicate listen directive"));
+    }
+
+    #[test]
+    fn allows_shared_listener_for_distinct_server_names() {
+        let cfg = parse_str(
+            r#"
+            server {
+                listen 127.0.0.1:8080
+                server_name one.test
+            }
+            server {
+                listen 127.0.0.1:8080
+                server_name two.test
+            }
+            "#,
+        )
+        .unwrap();
+        assert_eq!(cfg.servers.len(), 2);
+    }
+
+    #[test]
+    fn rejects_shared_listener_without_distinct_names() {
+        let err = parse_str(
+            r#"
+            server {
+                listen 127.0.0.1:8080
+            }
+            server {
+                listen 127.0.0.1:8080
+            }
+            "#,
+        )
+        .unwrap_err();
+        assert!(err.contains("duplicate listen endpoint"));
     }
 }
